@@ -13,9 +13,11 @@ const CalendarList = () => {
     month: currDate.getMonth(),
     day: currDate.getDate(),
   });
-  const [showDate, setShowDate] = React.useState(true);
-  const [showMonth, setShowMonth] = React.useState(false);
-  const [showYear, setShowYear] = React.useState(false);
+  const [showUnit, setShowUnit] = React.useState({
+    Date: true,
+    Month: false,
+    Year: false,
+  });
   const [selectedDate, setSelectedDate] = React.useState();
   const month_names = [
     "Jan",
@@ -122,16 +124,73 @@ const CalendarList = () => {
   };
 
   const calendar = renderCalendar(tmpDate.month, tmpDate.year);
+
+  let content = () => {
+    if (showUnit.Date) {
+      return month_names[tmpDate.month] + " " + tmpDate.year;
+    } else if (showUnit.Month) {
+      return tmpDate.year;
+    } else if (showUnit.Year) {
+      const rangeStart = tmpDate.year - (tmpDate.year % 10);
+      return rangeStart + "-" + (rangeStart + 9);
+    }
+  };
+
+  const switchUnit = (arg) => {
+    if (showUnit.Date) {
+      setShowUnit({
+        ...showUnit,
+        Date: false,
+        Month: true,
+      });
+    } else if (showUnit.Month) {
+      setShowUnit({
+        ...showUnit,
+        Month: false,
+        Year: true,
+      });
+    }
+  };
+
+  const renderMonthList = () => {
+    let arr = [];
+    month_names.forEach((month) =>
+      arr.push(<div className="calendar_month">{month}</div>)
+    );
+    return arr;
+  };
+
+  const renderYearList = () => {
+    let arr = [];
+    const rangeStart = tmpDate.year - (tmpDate.year % 10);
+    const rangeEnd = rangeStart + 9;
+    for (let i = 0; i < 12; i++) {
+      if (rangeStart - 1 + i < rangeStart || rangeStart - 1 + i > rangeEnd) {
+        arr.push(
+          <div className="calendar_year notinclude">{rangeStart - 1 + i}</div>
+        );
+      } else {
+        arr.push(<div className="calendar_year">{rangeStart - 1 + i}</div>);
+      }
+    }
+    return arr;
+  };
   return (
     <div className="calendar_container">
       <div className="calendar_header">
         <button onClick={() => slide("prev")}>&#706;</button>
-        {month_names[tmpDate.month] + " " + tmpDate.year}
+        <button onClick={() => switchUnit()}>{content()}</button>
         <button onClick={() => slide("next")}>&#707;</button>
       </div>
-      <div className="calendar_date_body">{showDate ? calendar : null}</div>
-      <div className="calendar_month_body">{showMonth ? calendar : null}</div>
-      <div className="calendar_year_body">{showYear ? calendar : null}</div>
+      <div className="calendar_date_body">
+        {showUnit.Date ? calendar : null}
+      </div>
+      <div className="calendar_month_body">
+        {showUnit.Month ? renderMonthList() : null}
+      </div>
+      <div className="calendar_year_body">
+        {showUnit.Year ? renderYearList() : null}
+      </div>
     </div>
   );
 };

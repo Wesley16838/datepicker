@@ -36,4 +36,14 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
   }
+  .calendar_month,
+  .calendar_year {
+    width: 52.5px;
+    height: 52.5px;
+    display: grid;
+    place-items: center;
+    &.notinclude {
+      color: #b8b8b8;
+    }
+  }
 }
