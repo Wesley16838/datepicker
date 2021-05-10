@@ -1,0 +1,39 @@
+.calendar_container {
+  display: grid;
+  grid-template-rows: 50px auto;
+  width: fit-content;
+  height: fit-content;
+  .calendar_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    button {
+      background-color: transparent;
+      border: none;
+    }
+  }
+  .calendar_date_body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    .current {
+      color: #d20000;
+    }
+    .calendar_day,
+    .weekdays,
+    .not_calendar_day {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+    }
+    .not_calendar_day {
+      color: #b8b8b8;
+    }
+  }
+  .calendar_month_body,
+  .calendar_year_body {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
