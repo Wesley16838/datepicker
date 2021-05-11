@@ -6,7 +6,9 @@
   "homepage": "http://wesley16838.github.io/datepicker",
   "scripts": {
     "start": "webpack server --hot --open",
-    "build": "webpack --config webpack.config.js --mode production"
+    "build": "webpack --config webpack.config.js --mode production",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
   },
   "repository": {
     "type": "git",
