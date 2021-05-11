@@ -1,4 +1,4 @@
-# <a href="https://wesley16838.github.io/phone_inputbox_component/" target="_blank">Calendat</a>
+# <a href="https://github.com/Wesley16838/datepicker/" target="_blank">Calendar</a>
 
 > Trend_Micro_Assessment
 
@@ -7,6 +7,8 @@
 [![npm version](https://img.shields.io/npm/v/if-node-version.svg?style=flat)](https://www.npmjs.com/package/if-node-version)
 [![Node version](https://img.shields.io/node/v/if-node-version.svg?style=flat)](https://www.npmjs.com/package/if-node-version)
 [![Build Status](https://travis-ci.org/mysticatea/if-node-version.svg?branch=master)](https://travis-ci.org/mysticatea/if-node-version)
+
+[![INSERT YOUR GRAPHIC HERE](https://raw.githubusercontent.com/Wesley16838/datepicker/master/calendar.png)]()
 
 ---
 
