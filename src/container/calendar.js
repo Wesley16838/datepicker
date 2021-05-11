@@ -106,19 +106,45 @@ const CalendarList = () => {
   const slide = (arg) => {
     switch (arg) {
       case "prev":
-        setTmpDate({
-          ...tmpDate,
-          month: tmpDate.month - 1 < 0 ? tmpDate.month + 11 : tmpDate.month - 1,
-          year: tmpDate.month - 1 < 0 ? tmpDate.year - 1 : tmpDate.year,
-        });
+        if(showUnit.Date) {
+          setTmpDate({
+            ...tmpDate,
+            month: tmpDate.month - 1 < 0 ? tmpDate.month + 11 : tmpDate.month - 1,
+            year: tmpDate.month - 1 < 0 ? tmpDate.year - 1 : tmpDate.year,
+          });
+        } else if (showUnit.Month) {
+          setTmpDate({
+            ...tmpDate,
+            year: tmpDate.year - 1,
+          });
+        } else if (showUnit.Year) {
+          setTmpDate({
+            ...tmpDate,
+            year: tmpDate.year - 10,
+          });
+        }
+        
         break;
       case "next":
-        setTmpDate({
-          ...tmpDate,
-          month:
-            tmpDate.month + 1 > 11 ? tmpDate.month - 11 : tmpDate.month + 1,
-          year: tmpDate.month + 1 > 11 ? tmpDate.year + 1 : tmpDate.year,
-        });
+        if(showUnit.Date) {
+          setTmpDate({
+            ...tmpDate,
+            month:
+              tmpDate.month + 1 > 11 ? tmpDate.month - 11 : tmpDate.month + 1,
+            year: tmpDate.month + 1 > 11 ? tmpDate.year + 1 : tmpDate.year,
+          });
+        } else if (showUnit.Month) {
+          setTmpDate({
+            ...tmpDate,
+            year: tmpDate.year + 1,
+          });
+        } else if (showUnit.Year) {
+          setTmpDate({
+            ...tmpDate,
+            year: tmpDate.year + 10,
+          });
+        }
+        
         break;
     }
   };
@@ -152,10 +178,40 @@ const CalendarList = () => {
     }
   };
 
+  const onClickMonth = (arg) => {
+    setShowUnit({
+      ...showUnit,
+      Date: true,
+      Month: false,
+    })
+    setTmpDate({
+      ...tmpDate,
+      month: arg,
+    })
+  }
+
+  const onClickYear = (arg) => {
+    setShowUnit({
+      ...showUnit,
+      Year: false,
+      Month: true,
+    })
+    setTmpDate({
+      ...tmpDate,
+      year: arg,
+    })
+  }
+
+
   const renderMonthList = () => {
     let arr = [];
-    month_names.forEach((month) =>
-      arr.push(<div className="calendar_month">{month}</div>)
+    month_names.forEach((month, index) => {
+      if (tmpDate.year === currentDate.year && index === currentDate.month) {
+        arr.push(<div className="calendar_month current" onClick={()=>onClickMonth(index)}>{month}</div>)
+      } else {
+        arr.push(<div className="calendar_month" onClick={()=>onClickMonth(index)}>{month}</div>)
+      }
+    }
     );
     return arr;
   };
@@ -167,10 +223,14 @@ const CalendarList = () => {
     for (let i = 0; i < 12; i++) {
       if (rangeStart - 1 + i < rangeStart || rangeStart - 1 + i > rangeEnd) {
         arr.push(
-          <div className="calendar_year notinclude">{rangeStart - 1 + i}</div>
+          <div className="calendar_year notinclude" onClick={()=>onClickYear(rangeStart - 1 + i)}>{rangeStart - 1 + i}</div>
         );
       } else {
-        arr.push(<div className="calendar_year">{rangeStart - 1 + i}</div>);
+        if( rangeStart - 1 + i === currentDate.year) {
+          arr.push(<div className="calendar_year current" onClick={()=>onClickYear(rangeStart - 1 + i)}>{rangeStart - 1 + i}</div>);
+        } else {
+          arr.push(<div className="calendar_year" onClick={()=>onClickYear(rangeStart - 1 + i)}>{rangeStart - 1 + i}</div>);
+        }
       }
     }
     return arr;

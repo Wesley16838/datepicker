@@ -3,6 +3,8 @@
   grid-template-rows: 50px auto;
   width: fit-content;
   height: fit-content;
+  width: 240px;
+  height:230px;
   .calendar_header {
     display: flex;
     flex-direction: row;
@@ -35,6 +37,7 @@
   .calendar_year_body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
   }
   .calendar_month,
   .calendar_year {
@@ -42,8 +45,26 @@
     height: 52.5px;
     display: grid;
     place-items: center;
+    box-sizing: border-box;
+    transition: .1s ease-in-out;
+    border-radius: 50%;
+    border: 0px solid transparent;
+    cursor: pointer;
     &.notinclude {
       color: #b8b8b8;
+    }
+    &.current {
+      border-radius: 50%;
+      background-color: #d20000;
+      color: #ffffff;
+    }
+    &:hover{
+      border-radius: 50%;
+      border: 2px solid #d2000085;
+    }
+    &:active{
+      border-radius: 50%;
+      border: 3px solid #d20000a2;
     }
   }
 }
