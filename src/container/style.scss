@@ -4,7 +4,7 @@
   width: fit-content;
   height: fit-content;
   width: 240px;
-  height:230px;
+  height: 230px;
   .calendar_header {
     display: flex;
     flex-direction: row;
@@ -20,7 +20,18 @@
     grid-template-columns: repeat(7, 1fr);
     .current {
       color: #d20000;
+      &.selected {
+        border-radius: 0;
+        background-color: #ffffff;
+        color: #d20000;
+      }
     }
+    .selected {
+      border-radius: 50%;
+      background-color: #d20000;
+      color: #ffffff;
+    }
+
     .calendar_day,
     .weekdays,
     .not_calendar_day {
@@ -28,6 +39,19 @@
       height: 30px;
       display: grid;
       place-items: center;
+      box-sizing: border-box;
+      transition: 0.1s ease-in-out;
+      border-radius: 50%;
+      border: 0px solid transparent;
+      cursor: pointer;
+      &:hover {
+        border-radius: 50%;
+        border: 2px solid #d2000085;
+      }
+      &:active {
+        border-radius: 50%;
+        border: 3px solid #d20000a2;
+      }
     }
     .not_calendar_day {
       color: #b8b8b8;
@@ -46,7 +70,7 @@
     display: grid;
     place-items: center;
     box-sizing: border-box;
-    transition: .1s ease-in-out;
+    transition: 0.1s ease-in-out;
     border-radius: 50%;
     border: 0px solid transparent;
     cursor: pointer;
@@ -58,11 +82,11 @@
       background-color: #d20000;
       color: #ffffff;
     }
-    &:hover{
+    &:hover {
       border-radius: 50%;
       border: 2px solid #d2000085;
     }
-    &:active{
+    &:active {
       border-radius: 50%;
       border: 3px solid #d20000a2;
     }

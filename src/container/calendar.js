@@ -3,22 +3,21 @@ import "./style.scss";
 
 const CalendarList = () => {
   const currDate = new Date();
-  const [currentDate, setCurrentDate] = React.useState({
+  const [selectedDate, setSelectedDate] = React.useState({
     year: currDate.getFullYear(),
     month: currDate.getMonth(),
-    day: currDate.getDate(),
+    date: currDate.getDate(),
   });
-  const [tmpDate, setTmpDate] = React.useState({
+  const [tmpSelectedDate, setTmpSelectedDate] = React.useState({
     year: currDate.getFullYear(),
     month: currDate.getMonth(),
-    day: currDate.getDate(),
+    date: currDate.getDate(),
   });
   const [showUnit, setShowUnit] = React.useState({
     Date: true,
     Month: false,
     Year: false,
   });
-  const [selectedDate, setSelectedDate] = React.useState();
   const month_names = [
     "Jan",
     "Feb",
@@ -77,25 +76,39 @@ const CalendarList = () => {
         classname = classname + "current ";
       }
       if (
+        selectedDate.date === i - first_day.getDay() + 1 &&
+        selectedDate.month === month &&
+        selectedDate.year === year
+      ) {
+        classname = classname + "selected ";
+      }
+      if (
         i - first_day.getDay() + 1 > days_of_month[month] ||
         i - first_day.getDay() + 1 <= 0
       ) {
         classname = classname + "not_calendar_day";
+        const current =
+          i - first_day.getDay() + 1 > days_of_month[month]
+            ? i - first_day.getDay() + 1 - days_of_month[month]
+            : days_of_month[month - 1 < 0 ? month + 11 : month - 1] +
+              i -
+              first_day.getDay() +
+              1;
         datelist.push(
-          <div className={classname}>
-            {i - first_day.getDay() + 1 > days_of_month[month]
-              ? i - first_day.getDay() + 1 - days_of_month[month]
-              : days_of_month[month - 1 < 0 ? month + 11 : month - 1] +
-                i -
-                first_day.getDay() +
-                1}
+          <div className={classname} onClick={() => onSelectDate(current)}>
+            {current}
           </div>
         ); // if 12 then 1 //////
       } else {
         if (i >= first_day.getDay()) {
           classname = classname + "calendar_day";
           datelist.push(
-            <div className={classname}>{i - first_day.getDay() + 1}</div>
+            <div
+              className={classname}
+              onClick={() => onSelectDate(i - first_day.getDay() + 1)}
+            >
+              {i - first_day.getDay() + 1}
+            </div>
           );
         }
       }
@@ -106,58 +119,69 @@ const CalendarList = () => {
   const slide = (arg) => {
     switch (arg) {
       case "prev":
-        if(showUnit.Date) {
-          setTmpDate({
-            ...tmpDate,
-            month: tmpDate.month - 1 < 0 ? tmpDate.month + 11 : tmpDate.month - 1,
-            year: tmpDate.month - 1 < 0 ? tmpDate.year - 1 : tmpDate.year,
+        if (showUnit.Date) {
+          setTmpSelectedDate({
+            ...tmpSelectedDate,
+            month:
+              tmpSelectedDate.month - 1 < 0
+                ? tmpSelectedDate.month + 11
+                : tmpSelectedDate.month - 1,
+            year:
+              tmpSelectedDate.month - 1 < 0
+                ? tmpSelectedDate.year - 1
+                : tmpSelectedDate.year,
           });
         } else if (showUnit.Month) {
-          setTmpDate({
-            ...tmpDate,
-            year: tmpDate.year - 1,
+          setTmpSelectedDate({
+            ...tmpSelectedDate,
+            year: tmpSelectedDate.year - 1,
           });
         } else if (showUnit.Year) {
-          setTmpDate({
-            ...tmpDate,
-            year: tmpDate.year - 10,
+          setTmpSelectedDate({
+            ...tmpSelectedDate,
+            year: tmpSelectedDate.year - 10,
           });
         }
-        
+
         break;
       case "next":
-        if(showUnit.Date) {
-          setTmpDate({
-            ...tmpDate,
+        if (showUnit.Date) {
+          setTmpSelectedDate({
+            ...tmpSelectedDate,
             month:
-              tmpDate.month + 1 > 11 ? tmpDate.month - 11 : tmpDate.month + 1,
-            year: tmpDate.month + 1 > 11 ? tmpDate.year + 1 : tmpDate.year,
+              tmpSelectedDate.month + 1 > 11
+                ? tmpSelectedDate.month - 11
+                : tmpSelectedDate.month + 1,
+            year:
+              tmpSelectedDate.month + 1 > 11
+                ? tmpSelectedDate.year + 1
+                : tmpSelectedDate.year,
           });
         } else if (showUnit.Month) {
-          setTmpDate({
-            ...tmpDate,
-            year: tmpDate.year + 1,
+          setTmpSelectedDate({
+            ...tmpSelectedDate,
+            year: tmpSelectedDate.year + 1,
           });
         } else if (showUnit.Year) {
-          setTmpDate({
-            ...tmpDate,
-            year: tmpDate.year + 10,
+          setTmpSelectedDate({
+            ...tmpSelectedDate,
+            year: tmpSelectedDate.year + 10,
           });
         }
-        
+
         break;
     }
   };
 
-  const calendar = renderCalendar(tmpDate.month, tmpDate.year);
+  const calendar = renderCalendar(tmpSelectedDate.month, tmpSelectedDate.year);
 
   let content = () => {
     if (showUnit.Date) {
-      return month_names[tmpDate.month] + " " + tmpDate.year;
+      return month_names[tmpSelectedDate.month] + " " + tmpSelectedDate.year;
     } else if (showUnit.Month) {
-      return tmpDate.year;
+      return tmpSelectedDate.year;
     } else if (showUnit.Year) {
-      const rangeStart = tmpDate.year - (tmpDate.year % 10);
+      const rangeStart = tmpSelectedDate.year - (tmpSelectedDate.year % 10);
       return rangeStart + "-" + (rangeStart + 9);
     }
   };
@@ -178,58 +202,101 @@ const CalendarList = () => {
     }
   };
 
+  const onSelectDate = (arg) => {
+    setTmpSelectedDate({
+      ...tmpSelectedDate,
+      date: arg,
+    });
+    setSelectedDate({
+      year: tmpSelectedDate.year,
+      month: tmpSelectedDate.month,
+      date: arg,
+    });
+  };
+
   const onClickMonth = (arg) => {
     setShowUnit({
       ...showUnit,
       Date: true,
       Month: false,
-    })
-    setTmpDate({
-      ...tmpDate,
+    });
+    setTmpSelectedDate({
+      ...tmpSelectedDate,
       month: arg,
-    })
-  }
+    });
+  };
 
   const onClickYear = (arg) => {
     setShowUnit({
       ...showUnit,
       Year: false,
       Month: true,
-    })
-    setTmpDate({
-      ...tmpDate,
+    });
+    setTmpSelectedDate({
+      ...tmpSelectedDate,
       year: arg,
-    })
-  }
-
+    });
+  };
 
   const renderMonthList = () => {
     let arr = [];
     month_names.forEach((month, index) => {
-      if (tmpDate.year === currentDate.year && index === currentDate.month) {
-        arr.push(<div className="calendar_month current" onClick={()=>onClickMonth(index)}>{month}</div>)
+      if (
+        tmpSelectedDate.year === selectedDate.year &&
+        index === selectedDate.month
+      ) {
+        arr.push(
+          <div
+            className="calendar_month current"
+            onClick={() => onClickMonth(index)}
+          >
+            {month}
+          </div>
+        );
       } else {
-        arr.push(<div className="calendar_month" onClick={()=>onClickMonth(index)}>{month}</div>)
+        arr.push(
+          <div className="calendar_month" onClick={() => onClickMonth(index)}>
+            {month}
+          </div>
+        );
       }
-    }
-    );
+    });
     return arr;
   };
 
   const renderYearList = () => {
     let arr = [];
-    const rangeStart = tmpDate.year - (tmpDate.year % 10);
+    const rangeStart = tmpSelectedDate.year - (tmpSelectedDate.year % 10);
     const rangeEnd = rangeStart + 9;
     for (let i = 0; i < 12; i++) {
       if (rangeStart - 1 + i < rangeStart || rangeStart - 1 + i > rangeEnd) {
         arr.push(
-          <div className="calendar_year notinclude" onClick={()=>onClickYear(rangeStart - 1 + i)}>{rangeStart - 1 + i}</div>
+          <div
+            className="calendar_year notinclude"
+            onClick={() => onClickYear(rangeStart - 1 + i)}
+          >
+            {rangeStart - 1 + i}
+          </div>
         );
       } else {
-        if( rangeStart - 1 + i === currentDate.year) {
-          arr.push(<div className="calendar_year current" onClick={()=>onClickYear(rangeStart - 1 + i)}>{rangeStart - 1 + i}</div>);
+        if (rangeStart - 1 + i === selectedDate.year) {
+          arr.push(
+            <div
+              className="calendar_year current"
+              onClick={() => onClickYear(rangeStart - 1 + i)}
+            >
+              {rangeStart - 1 + i}
+            </div>
+          );
         } else {
-          arr.push(<div className="calendar_year" onClick={()=>onClickYear(rangeStart - 1 + i)}>{rangeStart - 1 + i}</div>);
+          arr.push(
+            <div
+              className="calendar_year"
+              onClick={() => onClickYear(rangeStart - 1 + i)}
+            >
+              {rangeStart - 1 + i}
+            </div>
+          );
         }
       }
     }
