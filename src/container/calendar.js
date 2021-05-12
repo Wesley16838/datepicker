@@ -132,15 +132,18 @@ const CalendarList = () => {
   };
 
   // Select Date function
-  const onSelectDate = (arg) => {
+  const onSelectDate = (arg1, arg2 = undefined, arg3 = undefined) => {
+    const tmpMonth = arg2 || arg2 === 0 ? arg2 : tmpSelectedDate.month;
+    const tmpYear = arg3 ? arg3 : tmpSelectedDate.year;
     setTmpSelectedDate({
-      ...tmpSelectedDate,
-      date: arg,
+      year: tmpYear,
+      month: tmpMonth,
+      date: arg1,
     });
     setSelectedDate({
-      year: tmpSelectedDate.year,
-      month: tmpSelectedDate.month,
-      date: arg,
+      year: tmpYear,
+      month: tmpMonth,
+      date: arg1,
     });
   };
 
@@ -179,7 +182,7 @@ const CalendarList = () => {
       </div>
       {showUnit.Date ? (
         <DateTable
-          onClick={(arg) => onSelectDate(arg)}
+          onClick={(arg1, arg2, arg3) => onSelectDate(arg1, arg2, arg3)}
           data={selectedDate}
           tmpData={tmpSelectedDate}
         />

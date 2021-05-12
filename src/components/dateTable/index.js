@@ -14,8 +14,8 @@ const DateTable = (props) => {
     return isLeapYear(year) ? 29 : 28;
   };
 
-  const handleOnClick = (arg) => {
-    if (onClick) onClick(arg);
+  const handleOnClick = (arg1, arg2, arg3) => {
+    if (onClick) onClick(arg1, arg2, arg3);
   };
 
   const renderCalendar = (month, year) => {
@@ -75,8 +75,38 @@ const DateTable = (props) => {
               i -
               first_day.getDay() +
               1;
+        let tmpMonth = tmpData.month;
+        let tmpYear = tmpData.year;
+
+        if (
+          tmpData.month === 11 &&
+          i - first_day.getDay() + 1 > days_of_month[tmpData.month]
+        ) {
+          tmpMonth = 0;
+          tmpYear++;
+        } else if (
+          tmpData.month < 11 &&
+          i - first_day.getDay() + 1 > days_of_month[tmpData.month]
+        ) {
+          tmpMonth = tmpMonth + 1;
+        }
+        if (
+          tmpData.month === 0 &&
+          !(i - first_day.getDay() + 1 > days_of_month[tmpData.month])
+        ) {
+          tmpMonth = 11;
+          tmpYear--;
+        } else if (
+          tmpData.month > 0 &&
+          !(i - first_day.getDay() + 1 > days_of_month[tmpData.month])
+        ) {
+          tmpMonth = tmpMonth - 1;
+        }
         datelist.push(
-          <div className={classname} onClick={() => handleOnClick(current)}>
+          <div
+            className={classname}
+            onClick={() => handleOnClick(current, tmpMonth, tmpYear)}
+          >
             {current}
           </div>
         );
